@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="CRISOnomics">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRISOnomics — Théorie de la coûtenance des risques en contexte de polycrise</title>
+<title>📊 CRISOnomics</title>
 <script>/*!
  * Chart.js v4.5.1
  * https://www.chartjs.org
@@ -121,7 +121,8 @@ footer{text-align:center;padding:9px;font-size:9px;color:var(--muted2);border-to
 }.krow{grid-template-columns:repeat(3,1fr)}}
 
 /* ── LOCK SCREEN ── */
-#lockscreen{position:fixed;inset:0;z-index:9999;background:#0d0f1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+body.locked > *:not(#lockscreen){display:none !important}
+#lockscreen{position:fixed;inset:0;z-index:2147483647;background:#0d0f1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
 #lockscreen h1{font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,6vw,52px);letter-spacing:6px;color:#63b3ed;text-transform:uppercase;margin:0}
 #lockscreen p{font-size:12px;color:#4a5568;letter-spacing:2px;text-transform:uppercase;margin:0}
 #lock-input{background:#1a1d2e;border:1px solid #2d3748;border-radius:8px;color:#63b3ed;font-family:'IBM Plex Mono',monospace;font-size:18px;padding:12px 20px;text-align:center;letter-spacing:4px;outline:none;width:240px;transition:border-color .2s}
@@ -132,7 +133,7 @@ footer{text-align:center;padding:9px;font-size:9px;color:var(--muted2);border-to
 
 </style>
 </head>
-<body>
+<body class="locked">
 <div id="lockscreen">
   <h1>CRISOnomics</h1>
   <p>Accès restreint</p>
@@ -512,16 +513,16 @@ window.addEventListener("load", function(){ update(); });
 (function(){
   const CODE = 'Jekill_77';
   if(sessionStorage.getItem('cris_ok')==='1'){
+    document.body.classList.remove('locked');
     document.getElementById('lockscreen').style.display='none';
     return;
   }
-  document.body.style.overflow='hidden';
   window.checkLock = function(){
     const v = document.getElementById('lock-input').value;
     if(v === CODE){
       sessionStorage.setItem('cris_ok','1');
+      document.body.classList.remove('locked');
       document.getElementById('lockscreen').style.display='none';
-      document.body.style.overflow='';
     } else {
       document.getElementById('lock-err').textContent='Code incorrect';
       document.getElementById('lock-input').value='';
@@ -530,5 +531,6 @@ window.addEventListener("load", function(){ update(); });
   };
 })();
 </script>
+
 </body>
 </html>
