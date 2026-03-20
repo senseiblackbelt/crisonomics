@@ -119,9 +119,28 @@ footer{text-align:center;padding:9px;font-size:9px;color:var(--muted2);border-to
   .kv{font-size:18px}
   .kl{font-size:9px}
 }.krow{grid-template-columns:repeat(3,1fr)}}
+
+/* ── LOCK SCREEN ── */
+#lockscreen{position:fixed;inset:0;z-index:9999;background:#0d0f1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+#lockscreen h1{font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,6vw,52px);letter-spacing:6px;color:#63b3ed;text-transform:uppercase;margin:0}
+#lockscreen p{font-size:12px;color:#4a5568;letter-spacing:2px;text-transform:uppercase;margin:0}
+#lock-input{background:#1a1d2e;border:1px solid #2d3748;border-radius:8px;color:#63b3ed;font-family:'IBM Plex Mono',monospace;font-size:18px;padding:12px 20px;text-align:center;letter-spacing:4px;outline:none;width:240px;transition:border-color .2s}
+#lock-input:focus{border-color:#63b3ed}
+#lock-err{font-size:11px;color:#fc8181;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;height:16px}
+#lock-btn{background:#63b3ed;color:#0d0f1a;border:none;border-radius:6px;padding:10px 32px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+#lock-btn:hover{background:#90cdf4;transform:scale(1.03)}
+
 </style>
 </head>
 <body>
+<div id="lockscreen">
+  <h1>CRISOnomics</h1>
+  <p>Accès restreint</p>
+  <input id="lock-input" type="password" placeholder="Code d'accès" onkeydown="if(event.key==='Enter')checkLock()">
+  <div id="lock-err"></div>
+  <button id="lock-btn" onclick="checkLock()">Accéder</button>
+</div>
+
 <header>
   <div class="ht">
     <div>
@@ -487,6 +506,29 @@ function update() {
 }
 
 window.addEventListener("load", function(){ update(); });
+</script>
+<script>
+// ── LOCK SCREEN ──
+(function(){
+  const CODE = 'Jekill_77';
+  if(sessionStorage.getItem('cris_ok')==='1'){
+    document.getElementById('lockscreen').style.display='none';
+    return;
+  }
+  document.body.style.overflow='hidden';
+  window.checkLock = function(){
+    const v = document.getElementById('lock-input').value;
+    if(v === CODE){
+      sessionStorage.setItem('cris_ok','1');
+      document.getElementById('lockscreen').style.display='none';
+      document.body.style.overflow='';
+    } else {
+      document.getElementById('lock-err').textContent='Code incorrect';
+      document.getElementById('lock-input').value='';
+      setTimeout(()=>document.getElementById('lock-err').textContent='',1500);
+    }
+  };
+})();
 </script>
 </body>
 </html>
